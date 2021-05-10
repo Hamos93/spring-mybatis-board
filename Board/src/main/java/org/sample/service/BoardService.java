@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.sample.domain.BoardVO;
 
+/* 메서드 설계 시 메서드 이름은 현실적인 로직의 이름을 붙이는 것이 관례 */
+
 public interface BoardService {
-	
-	// 메서드 설계 시 메서드 이름은 현실적인 로직의 이름을 붙이는 것이 관례
-	
+
 	public void register(BoardVO board);
 	
 	public BoardVO get(Long bno);
