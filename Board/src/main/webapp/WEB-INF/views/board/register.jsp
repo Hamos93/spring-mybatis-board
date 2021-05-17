@@ -12,6 +12,10 @@
 
 <title>게시글 등록</title>
 
+<!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <!-- 합쳐지고 최소화된 최신 CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -43,7 +47,7 @@
 					<div class="panel-body">
 						<form role="form" action="/board/register" method="post">
 							<div class="form-group col-lg-9 col-lg-offset-1">
-								<br /> <label>글 제목</label> <input type="text"
+								<br /> <label>제목</label> <input type="text"
 									class="form-control" name="title" placeholder="제목을 입력하세요">
 							</div>
 							<div class="form-group col-lg-9 col-lg-offset-1">
@@ -63,8 +67,6 @@
 							<div class="form-group col-lg-9 col-lg-offset-1">
 							<br/><br/>
 							<button type="submit" class="btn btn-primary">등록</button>
-							<button type="submit" class="btn btn-warning">수정</button>
-							<button type="submit" class="btn btn-danger">삭제</button>
 							</div>
 						</form>
 					</div>
