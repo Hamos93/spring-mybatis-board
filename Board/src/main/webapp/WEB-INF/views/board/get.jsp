@@ -69,17 +69,38 @@
 								readonly="readonly">
 							</div>
 						</div>
-						<div class="form-group col-lg-9 col-lg-offset-1">
+						<div class="col-lg-9 col-lg-offset-1">
 							<br />
 							<br />
-							<button data-oper='modify' class="btn btn-primary" onclick="location.href='/board/list'">목록</button>
-							<button type="submit" class="btn btn-warning" onclick="location.href='/board/modify?bno=<c:out value="${board.bno }"/>'">수정</button>
-							<button type="submit" class="btn btn-danger">삭제</button>
+							<button data-oper='list' class="btn btn-primary">목록</button>
+							<button data-oper='modify' class="btn btn-warning">수정</button>
+						
+							<form id='operForm' action="/board/modify" method="get">
+								<input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno }"/>'>
+							</form>
+						
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var operForm = $("#operForm");
+		
+		$("button[data-oper='list']").on("click", function(e){
+			operForm.find("#bno").remove();
+			operForm.attr("action", "/board/list");
+			operForm.submit();
+		});
+		
+		$("button[data-oper='modify']").on("click", function(e){
+			operForm.attr("action", "/board/modify").submit();
+		});
+	});
+</script>
+	
 </body>
 </html>

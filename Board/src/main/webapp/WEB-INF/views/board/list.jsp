@@ -85,10 +85,10 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<h4 class="modal-title">
-						<i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;알림</i>
+						<i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;</i>알림
 					</h4>
 				</div>
-				<div class="modal-body"></div>
+				<div class="modal-body">처리가 완료되었습니다.</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
 				</div>

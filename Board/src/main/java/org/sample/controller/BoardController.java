@@ -42,7 +42,7 @@ public class BoardController {
 		model.addAttribute("list", service.getList());
 	}
 
-	@GetMapping("/get")
+	@GetMapping({ "/get", "/modify" })
 	public void get(@RequestParam("bno") Long bno, Model model) {
 		log.info("[ Controller ] get() 호출");
 		
