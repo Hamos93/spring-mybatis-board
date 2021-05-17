@@ -20,7 +20,7 @@
 	</insert>
 	
 	<select id="getList" resultType="org.sample.domain.BoardVO">
-		select * from tbl_board
+		select * from tbl_board order by bno desc
 	</select>
 
 	<select id="read" resultType="org.sample.domain.BoardVO">
