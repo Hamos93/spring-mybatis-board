@@ -69,7 +69,7 @@ public class BoardMapperTests {
 	
 	@Test
 	public void delete() {
-		int count = mapper.delete(1L);
+		int count = mapper.delete(83L);
 		log.info("[ DELETE COUNT ] : " + count);
 	}
 	
