@@ -91,7 +91,7 @@
 								<br /> <br />
 								<button data-oper='list' class="btn btn-primary">목록</button>
 								<button data-oper='modify' class="btn btn-warning">수정</button>
-								<button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
+								<button data-oper='remove' class="btn btn-danger">삭제</button>
 							</div>
 						</form>
 					</div>
@@ -110,7 +110,6 @@
 			var operation = $(this).data("oper");
 
 			if(operation === 'remove') {
-				console.log("=-0-===========================================");
 				formObj.attr("action", "/board/remove");
 			}else if(operation === 'list') {
 				formObj.attr("action", "/board/list").attr("method", "get");

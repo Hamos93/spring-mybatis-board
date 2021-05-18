@@ -2,8 +2,8 @@ package org.sample.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
 import org.sample.domain.BoardVO;
+import org.sample.domain.Criteria;
 
 public interface BoardMapper {
 	
@@ -17,6 +17,8 @@ public interface BoardMapper {
 	/* [ Read ] */
 	// @Select("select * from TBL_BOARD")
 	public List<BoardVO> getList();	
+	
+	public List<BoardVO> getListWithPaging(Criteria cri);
 
 	public BoardVO read(Long bno);
 

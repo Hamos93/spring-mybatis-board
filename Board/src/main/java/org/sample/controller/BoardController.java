@@ -1,6 +1,7 @@
 package org.sample.controller;
 
 import org.sample.domain.BoardVO;
+import org.sample.domain.Criteria;
 import org.sample.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,10 +37,10 @@ public class BoardController {
 	}
 
 	@GetMapping("/list")
-	public void list(Model model) {
+	public void list(Criteria cri, Model model) {
 		log.info("[ Controller ] list() 호출");
 
-		model.addAttribute("list", service.getList());
+		model.addAttribute("list", service.getListWithPaging(cri));
 	}
 
 	@GetMapping({ "/get", "/modify" })

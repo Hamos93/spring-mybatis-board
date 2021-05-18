@@ -1,8 +1,11 @@
 package org.sample.mapper;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.sample.domain.BoardVO;
+import org.sample.domain.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -47,6 +50,14 @@ public class BoardMapperTests {
 	@Test
 	public void getList() {
 		mapper.getList().forEach(board -> log.info(board));
+	}
+	
+	@Test
+	public void paging() {
+		Criteria cri = new Criteria(3, 10);
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+		
+		list.forEach(board -> log.info(board));
 	}
 	
 	@Test

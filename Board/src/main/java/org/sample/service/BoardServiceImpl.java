@@ -3,6 +3,7 @@ package org.sample.service;
 import java.util.List;
 
 import org.sample.domain.BoardVO;
+import org.sample.domain.Criteria;
 import org.sample.mapper.BoardMapper;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +32,20 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.read(bno);
 	}
 
+	/*
 	@Override
 	public List<BoardVO> getList() {
 		log.info("[ Service ] 게시글 목록 조회");
 		
 		return mapper.getList();
 	}
-
+	*/
+	
+	@Override
+	public List<BoardVO> getListWithPaging(Criteria cri) {
+		return mapper.getListWithPaging(cri);
+	}
+	
 	@Override
 	public boolean modify(BoardVO board) {
 		log.info("[ Service ] 게시글 수정");
