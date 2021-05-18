@@ -28,4 +28,7 @@ public interface BoardMapper {
 	/* [ delete ] */
 	public int delete(Long bno);
 
+	// pageDTO -> 모든 게시물의 수
+	public int getTotalCount(Criteria cri);
+	
 }

@@ -46,6 +46,10 @@
 					<div class="panel-heading">게시글을 수정합니다</div>
 					<div class="panel-body">
 						<form role="form" action="/board/modify" method="post">
+							<!-- 페이지 정보 -->
+							<input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum }"/>'>
+							<input type='hidden' name='amount' value='<c:out value="${cri.amount }"/>'>
+						
 							<div class="form-group col-lg-9 col-lg-offset-1">
 								<br /> <label>번호</label> <input type="text"
 									class="form-control" name="bno"
@@ -113,7 +117,13 @@
 				formObj.attr("action", "/board/remove");
 			}else if(operation === 'list') {
 				formObj.attr("action", "/board/list").attr("method", "get");
+				var pageNumTag = $("input[name='pageNum']").clone();
+				var amountTag = $("input[name='amount']").clone();
+				
 				formObj.empty();
+				
+				formObj.append(pageNumTag);
+				formObj.append(amountTag);
 			}
 			
 			formObj.submit();

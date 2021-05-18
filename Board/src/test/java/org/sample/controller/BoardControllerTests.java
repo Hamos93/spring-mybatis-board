@@ -58,7 +58,6 @@ public class BoardControllerTests {
 				.getModelMap());
 	}
 
-
 	@Test
 	public void get() throws Exception {
 		log.info(mockMvc.perform(MockMvcRequestBuilders

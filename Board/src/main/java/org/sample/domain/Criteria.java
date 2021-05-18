@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 /* 페이징 처리 클래스 */
-
 @Getter
 @Setter
 @ToString
