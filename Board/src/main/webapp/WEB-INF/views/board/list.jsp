@@ -64,7 +64,8 @@
 			<c:forEach items="${list}" var="board">
 				<tr>
 					<td><c:out value="${board.bno}" /></td>
-					<td><a class='move' href='<c:out value="${board.bno}" />'><c:out value="${board.title}" /></a></td>
+					<td><a class='move' href='<c:out value="${board.bno}" />'><c:out
+								value="${board.title}" /></a></td>
 					<td><c:out value="${board.writer}" /></td>
 					<td><fmt:formatDate pattern="yyyy-MM-dd"
 							value="${board.regdate }" /></td>
@@ -73,30 +74,71 @@
 				</tr>
 			</c:forEach>
 		</table>
-		
-		<!-- 페이지네이션 -->		
+
+		<!-- 검색창 -->
+		<div class="row">
+			<form class="form-inline" id="searchForm" action="/board/list"
+				method="get">
+				<select class="form-control" name="type">
+					<option value="T"
+						<c:out value="${pageMaker.cri.type eq 'T' ? 'selected':'' }"/>>제목</option>
+					<option value="C"
+						<c:out value="${pageMaker.cri.type eq 'C' ? 'selected':'' }"/>>내용</option>
+					<option value="W"
+						<c:out value="${pageMaker.cri.type eq 'W' ? 'selected':'' }"/>>작성자</option>
+					<option value="TC"
+						<c:out value="${pageMaker.cri.type eq 'TC' ? 'selected':'' }"/>>제목
+						+ 내용</option>
+					<option value="TW"
+						<c:out value="${pageMaker.cri.type eq 'TW' ? 'selected':'' }"/>>제목
+						+ 작성자</option>
+					<option value="TWC"
+						<c:out value="${pageMaker.cri.type eq 'TWC' ? 'selected':'' }"/>>제목
+						+ 작성자 + 내용</option>
+				</select> <input class="form-control" type="text" name="keyword"
+					style="width: 400px;"
+					value='<c:out value="${pageMaker.cri.keyword }"/>'> <input
+					type="hidden" value="${pageMaker.cri.pageNum }"> <input
+					type="hidden" value="${pageMaker.cri.amount }">
+				<button class="btn btn-default">검색</button>
+			</form>
+		</div>
+		<!-- /.row -->
+
+		<!-- 페이지네이션 -->
 		<div class='pull-right'>
 			<ul class="pagination">
-				
+
 				<c:if test="${pageMaker.prev }">
-					<li class="paginate_button previous"><a href="${pageMaker.startPage - 1}">이전</a></li>	
+					<li class="paginate_button previous"><a
+						href="${pageMaker.startPage - 1}">이전</a></li>
 				</c:if>
-			
-				<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
-					<li class="paginate_button ${pageMaker.cri.pageNum == num ? 'active': '' }"><a href="${num }">${num }</a></li>
+
+				<c:forEach var="num" begin="${pageMaker.startPage }"
+					end="${pageMaker.endPage }">
+					<li
+						class="paginate_button ${pageMaker.cri.pageNum == num ? 'active': '' }"><a
+						href="${num }">${num }</a></li>
 				</c:forEach>
-				
+
 				<c:if test="${pageMaker.next }">
-					<li class="paginate_button next"><a href="${pageMaker.endPage + 1}">다음</a></li>	
+					<li class="paginate_button next"><a
+						href="${pageMaker.endPage + 1}">다음</a></li>
 				</c:if>
 			</ul>
 			<form id="actionForm" action="/board/list" method="get">
-				<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
-				<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
-			</form>
-		</div> <!-- end Pagination -->
-	</div>
+				<input type="hidden" name="pageNum"
+					value="${pageMaker.cri.pageNum }"> <input type="hidden"
+					name="amount" value="${pageMaker.cri.amount }">
 
+				<!-- 페이지 이동 시에도 검색 데이터와 함께 전송 -->
+				<input type="hidden" name="type" value="${pageMaker.cri.type }">
+				<input type="hidden" name="keyword"
+					value="${pageMaker.cri.keyword }">
+			</form>
+		</div>
+		<!-- end Pagination -->
+	</div>
 	<!-- 모달 -->
 	<div class="modal fade" id="myModal">
 		<div class="modal-dialog">
@@ -122,51 +164,89 @@
 	<!-- /.modal -->
 
 	<script type="text/javascript">
-		$(document).ready(
-				function() {
-					var result = '<c:out value="${result}"/>';
+		$(document)
+				.ready(
+						function() {
+							var result = '<c:out value="${result}"/>';
 
-					checkModal(result);
+							checkModal(result);
 
-					// 뒤로가기 제어 -> 브라우저 주소창에서 보관하고 있는 데이터를 제거
-					history.replaceState({}, null, null);
-					
-					// 모달창 여부
-					function checkModal(result) {
-						if (result == '' || history.state)
-							return;
+							// 뒤로가기 제어 -> 브라우저 주소창에서 보관하고 있는 데이터를 제거
+							history.replaceState({}, null, null);
 
-						if (parseInt(result) > 0) {
-							$(".modal-body").html(
-									parseInt(result) + " 번 게시글이 등록되었습니다.");
-						}
+							// 모달창 여부
+							function checkModal(result) {
+								if (result == '' || history.state)
+									return;
 
-						$("#myModal").modal("show");
-					}
-	
-					// 글 등록 버튼 클릭 이벤트 발생 시 페이지 이동
-					$("#regBtn").on("click", function() {
-						self.location = "/board/register";
-					});
-					
-					// 페이지 버튼 이동
-					var actionForm = $("#actionForm");
-					$(".paginate_button a").on("click", function(e){
-						e.preventDefault();
+								if (parseInt(result) > 0) {
+									$(".modal-body").html(
+											parseInt(result)
+													+ " 번 게시글이 등록되었습니다.");
+								}
 
-						actionForm.find("input[name='pageNum']").val($(this).attr("href"));
-						actionForm.submit();
-					});
+								$("#myModal").modal("show");
+							}
 
-					// 게시물 클릭 시 페이징 정보와 함께 전송
-					$(".move").on("click", function(e){
-						e.preventDefault();
-						actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
-						actionForm.attr("action", "/board/get");
-						actionForm.submit();
-					});
-				
-				});
+							// 글 등록 버튼 클릭 이벤트 발생 시 페이지 이동
+							$("#regBtn").on("click", function() {
+								self.location = "/board/register";
+							});
+
+							// 페이지 버튼 이동
+							var actionForm = $("#actionForm");
+							$(".paginate_button a").on(
+									"click",
+									function(e) {
+										e.preventDefault();
+
+										actionForm
+												.find("input[name='pageNum']")
+												.val($(this).attr("href"));
+										actionForm.submit();
+									});
+
+							// 게시물 클릭 시 페이징 정보와 함께 전송
+							$(".move")
+									.on(
+											"click",
+											function(e) {
+												e.preventDefault();
+												actionForm
+														.append("<input type='hidden' name='bno' value='"
+																+ $(this).attr(
+																		"href")
+																+ "'>");
+												actionForm.attr("action",
+														"/board/get");
+												actionForm.submit();
+											});
+
+							// 검색 버튼 클릭 이벤트
+							var searchForm = $("#searchForm");
+							$("#searchForm button")
+									.on(
+											"click",
+											function(e) {
+
+												if (!searchForm
+														.find(
+																"input[name='keyword']")
+														.val()) {
+													alert("검색 키워드를 입력하세요.");
+													return false;
+												}
+
+												searchForm
+														.find(
+																"input[name='pageNum']")
+														.val(1);
+												e.preventDefault();
+
+												searchForm.submit();
+											});
+
+						});
 	</script>
 
 </body>
