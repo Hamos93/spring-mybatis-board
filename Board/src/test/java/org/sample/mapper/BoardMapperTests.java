@@ -84,4 +84,18 @@ public class BoardMapperTests {
 		log.info("[ DELETE COUNT ] : " + count);
 	}
 	
+	@Test
+	public void search() {
+		Criteria cri = new Criteria();
+	
+		// 검색 조건이 있는 경우
+		// 검색 조건이 없는 경우 -> 키워드와 타입 지정 X
+		cri.setKeyword("비트코인");
+		cri.setType("TC");
+		
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+		
+		list.forEach(board -> log.info(board));
+	}
+	
 }
