@@ -32,7 +32,7 @@ public class ReplyMapperTests {
 	@Test
 	public void insert() {
 		ReplyVO reply = new ReplyVO();
-		
+
 		reply.setBno(206L);
 		reply.setReply("댓글 추가 테스트");
 		reply.setReplyer("댓글 추가 테스트");
@@ -70,8 +70,8 @@ public class ReplyMapperTests {
 	@Test
 	public void list() {
 		List<ReplyVO> replies = mapper.getListWithPaging(new Criteria(), 206L);
-		
+
 		replies.forEach(reply -> log.info(reply));
 	}
-	
+
 }
