@@ -61,7 +61,6 @@
 		</trim>
 	</sql>
 
-
 	<select id="getListWithPaging"
 		resultType="org.sample.domain.BoardVO">
 		<![CDATA[
