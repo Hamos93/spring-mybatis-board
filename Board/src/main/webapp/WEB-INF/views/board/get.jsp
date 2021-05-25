@@ -58,33 +58,37 @@
 						<div class="form-group col-lg-9 col-lg-offset-1">
 							<br /> <label>내용</label>
 							<textarea class="form-control" name="content" rows="10"
-								readonly="readonly"><c:out value="${board.content }"/></textarea>
+								readonly="readonly"><c:out value="${board.content }" /></textarea>
 						</div>
 						<div class="form-group col-lg-9 col-lg-offset-1">
 							<br /> <label>작성자</label>
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1"><span
 									class="glyphicon glyphicon-user"></span></span><input type="text"
-									class="form-control" name="writer" value='<c:out value="${board.writer }"/>'
-								readonly="readonly">
+									class="form-control" name="writer"
+									value='<c:out value="${board.writer }"/>' readonly="readonly">
 							</div>
 						</div>
 						<div class="col-lg-9 col-lg-offset-1">
-							<br />
-							<br />
+							<br /> <br />
 							<button data-oper='list' class="btn btn-primary">목록</button>
 							<button data-oper='modify' class="btn btn-warning">수정</button>
-						
+
 							<form id='operForm' action="/board/modify" method="get">
-								<input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno }"/>'>
+								<input type='hidden' id='bno' name='bno'
+									value='<c:out value="${board.bno }"/>'>
 								<!-- 페이지 정보 -->
-								<input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum }"/>'>
-								<input type='hidden' name='amount' value='<c:out value="${cri.amount }"/>'>
+								<input type='hidden' name='pageNum'
+									value='<c:out value="${cri.pageNum }"/>'> <input
+									type='hidden' name='amount'
+									value='<c:out value="${cri.amount }"/>'>
 								<!-- 검색 정보 -->
-								<input type="hidden" name="type" value='<c:out value="${cri.type }"/>'>
-								<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }"/>'>
+								<input type="hidden" name="type"
+									value='<c:out value="${cri.type }"/>'> <input
+									type="hidden" name="keyword"
+									value='<c:out value="${cri.keyword }"/>'>
 							</form>
-						
+
 						</div>
 					</div>
 				</div>
@@ -92,21 +96,29 @@
 		</div>
 	</div>
 
-<script type="text/javascript">
-	$(document).ready(function(){
-		var operForm = $("#operForm");
-		
-		$("button[data-oper='list']").on("click", function(e){
-			operForm.find("#bno").remove();
-			operForm.attr("action", "/board/list");
-			operForm.submit();
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var operForm = $("#operForm");
+
+			$("button[data-oper='list']").on("click", function(e) {
+				operForm.find("#bno").remove();
+				operForm.attr("action", "/board/list");
+				operForm.submit();
+			});
+
+			$("button[data-oper='modify']").on("click", function(e) {
+				operForm.attr("action", "/board/modify").submit();
+			});
 		});
-		
-		$("button[data-oper='modify']").on("click", function(e){
-			operForm.attr("action", "/board/modify").submit();
+	</script>
+
+	<!-- 댓글 처리 관련 JavaScript -->
+	<script type="text/javascript" src="/resources/js/reply.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			console.log(replyService);
 		});
-	});
-</script>
-	
+	</script>
+
 </body>
 </html>
