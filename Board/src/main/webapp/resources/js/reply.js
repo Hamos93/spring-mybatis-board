@@ -43,6 +43,7 @@ var replyService = (function(){
 	
 	// 목록 처리
 	function getList(param, callback, error){
+		var bno = param.bno;
 		var page = param.page || 1;
 
 		$.getJSON("/replies/pages/" + bno + "/" + page + ".json", 
@@ -95,12 +96,37 @@ var replyService = (function(){
 		});
 	}
 	
+	// 시간에 대한 처리
+	function displayTime(time){
+		var today = new Date();
+		var gap = today.getTime() - time;
+		
+		var dateObj = new Date(time);
+		var str = "";
+		
+		// 오늘 등록된 댓글
+		if(gap < (1000 * 60 * 60 * 24)){
+			var hh = dateObj.getHours();
+			var mm = dateObj.getMinutes();
+			var ss = dateObj.getSeconds();
+			
+			return [ (hh > 9 ? '': '0') + hh, ':', (mm > 9 ? '' : '0') + mm, ':', (ss > 9 ? '' : '0') + ss ].join('');
+		}else {
+			var yy = dateObj.getFullYear();
+			var mm = dateObj.getMonth() + 1;
+			var dd = dateObj.getDate();
+			
+			return [ yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd ].join('');
+		}
+	}
+	
 	return { 
 		add: add,
 		get: get,
 		getList: getList,
 		update: update,
-		remove: remove
+		remove: remove,
+		displayTime: displayTime
 	};
 	
 })();
