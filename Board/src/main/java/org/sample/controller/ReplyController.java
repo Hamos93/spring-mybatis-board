@@ -3,6 +3,7 @@ package org.sample.controller;
 import java.util.List;
 
 import org.sample.domain.Criteria;
+import org.sample.domain.ReplyPageDTO;
 import org.sample.domain.ReplyVO;
 import org.sample.service.ReplyService;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,17 @@ public class ReplyController {
 		
 		return new ResponseEntity<>(service.getList(cri, bno), HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/pages/{bno}/{page}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<ReplyPageDTO> getListWithPaging(@PathVariable("page") int page, @PathVariable("bno") Long bno){
+		Criteria cri = new Criteria(page, 10);
+	
+		log.info("[ get Reply List bno ]: " + bno);
+		log.info("[ cri ]: " + cri);
+		
+		return new ResponseEntity<>(service.getListWithPaging(cri, bno), HttpStatus.OK);
+	}
+	
 	
 	@GetMapping(value = "/{rno}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<ReplyVO> get(@PathVariable("rno") Long rno){

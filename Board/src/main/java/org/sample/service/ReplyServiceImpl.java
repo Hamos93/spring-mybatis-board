@@ -3,6 +3,7 @@ package org.sample.service;
 import java.util.List;
 
 import org.sample.domain.Criteria;
+import org.sample.domain.ReplyPageDTO;
 import org.sample.domain.ReplyVO;
 import org.sample.mapper.ReplyMapper;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,11 @@ public class ReplyServiceImpl implements ReplyService {
 	public List<ReplyVO> getList(Criteria cri, Long bno) {
 		log.info("[ Service ] " + bno + "번 댓글 목록");
 		return mapper.getListWithPaging(cri, bno);
+	}
+
+	@Override
+	public ReplyPageDTO getListWithPaging(Criteria cri, Long bno) {
+		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(cri, bno));
 	}
 	
 }

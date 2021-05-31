@@ -24,4 +24,7 @@ public interface ReplyMapper {
 	// MyBatis에서 두 개 이상의 데이터를 파라미터로 전달하기 위해 @Param을 이용
 	public List<ReplyVO> getListWithPaging(@Param("cri") Criteria cri, @Param("bno") Long bno);
 
+	/* 해당 게시물의 전체 댓글 수 */
+	public int getCountByBno(Long bno);
+	
 }
