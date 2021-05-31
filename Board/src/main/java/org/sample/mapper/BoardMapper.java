@@ -2,6 +2,7 @@ package org.sample.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.sample.domain.BoardVO;
 import org.sample.domain.Criteria;
 
@@ -30,5 +31,7 @@ public interface BoardMapper {
 
 	// pageDTO -> 모든 게시물의 수
 	public int getTotalCount(Criteria cri);
-	
+
+	public void updateReplyCnt(@Param("bno") Long bno, @Param("amount") int amount);
+
 }

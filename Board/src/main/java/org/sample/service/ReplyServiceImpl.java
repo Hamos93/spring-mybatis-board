@@ -5,26 +5,32 @@ import java.util.List;
 import org.sample.domain.Criteria;
 import org.sample.domain.ReplyPageDTO;
 import org.sample.domain.ReplyVO;
+import org.sample.mapper.BoardMapper;
 import org.sample.mapper.ReplyMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Service // 비즈니스 영역을 담당하는 객체임을 표시
-@AllArgsConstructor
 @Log4j
 public class ReplyServiceImpl implements ReplyService {
 	
 	/* [ 의존성 주입 ] */
-	// ReplyServiceImpl 객체는 ReplyMapper가 없으면 일 수행 X
-	// 스프링 4.3 이상에서 단일 생성자의 묵시적 자동주입
+	@Setter(onMethod_ = @Autowired)
 	private ReplyMapper mapper;
 
+	@Setter(onMethod_ = @Autowired)
+	private BoardMapper boardMapper;
+
+	@Transactional
 	@Override
 	public int register(ReplyVO reply) {
 		log.info("[ Service ] " + reply);
-
+		
+		boardMapper.updateReplyCnt(reply.getBno(), 1);
 		return mapper.insert(reply);
 	}
 
@@ -42,9 +48,14 @@ public class ReplyServiceImpl implements ReplyService {
 		return mapper.update(reply);
 	}
 
+	@Transactional
 	@Override
 	public int remove(Long rno) {
 		log.info("[ Service ] " + rno + "번 댓글 삭제");
+
+		ReplyVO reply = mapper.read(rno);
+		boardMapper.updateReplyCnt(reply.getBno(), -1);
+		
 		return mapper.delete(rno);
 	}
 
