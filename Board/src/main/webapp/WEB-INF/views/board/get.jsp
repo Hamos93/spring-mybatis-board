@@ -111,13 +111,18 @@
 							<li data-rno="12">
 								<div>
 									<div class="header">
-										<strong>user00</strong> <small class="pull-right text-muted">2021-05-26
-											16:24</small>
+										<strong></strong> <small class="pull-right text-muted">
+											</small>
 									</div>
-									<p>Good job!</p>
+									<p></p>
 								</div>
 							</li>
 						</ul>
+					</div>
+					
+					<!-- 댓글 페이징 -->
+					<div class="panel-footer">
+						
 					</div>
 				</div>
 			</div>
@@ -196,20 +201,31 @@
 
 							// 댓글 목록 조회
 							function showList(page) {
+								console.log("[ 댓글목록 조회 ]: " + page);
+								
 								replyService
 										.getList(
 												{
 													bno : bnoValue,
 													page : page || 1
 												},
-												function(list) {
-													if (list == null
-															|| list.length == 0) {
-														replyUL.html("");
-
+												function(replyCnt, list) {
+													console.log("replyCnt: " + replyCnt);
+													console.log("list: " + list);
+													
+													if(page == -1){
+														pageNum = Math.ceil(replyCnt / 10.0);
+														showList(pageNum);
 														return;
 													}
+													
 													var str = "";
+													
+													if (list == null
+															|| list.length == 0) {
+														return;
+													}
+
 													for (var i = 0, len = list.length || 0; i < len; i++) {
 														str += "<li data-rno='" + list[i].rno + "'>";
 														str += "	<div><div class='header'><strong>"
@@ -225,9 +241,60 @@
 													}
 
 													replyUL.html(str);
+													
+													// 댓글 페이징
+													showReplyPage(replyCnt);
 												});
 							}
 
+							// 댓글 페이징 처리
+							var pageNum = 1;
+							var replyPageFooter = $(".panel-footer");
+							
+							function showReplyPage(replyCnt){
+								var endNum = Math.ceil(pageNum / 10.0) * 10;
+								var startNum = endNum - 9;
+								
+								var prev = startNum != 1;
+								var next = false;
+								
+								if(endNum * 10 >= replyCnt)
+									endNum = Math.ceil(replyCnt / 10.0);
+								
+								if(endNum * 10 < replyCnt)
+									next = true;
+								
+								var str = "<div><ul class='pagination pull-right'>";
+								
+								if(prev){
+									str += "<li class='page-item'><a class='page-link' href='" + (startNum - 1) + "'>이전</a></li>";
+								}
+								
+								for(var i=startNum;i<=endNum;i++){
+									var active = pageNum == i ? "active" : "";
+									
+									str += "<li class='page-item " + active + " '><a class='page-link' href='" + i + "'>" + i + "</a></li>"; 
+								}
+								
+								if(next){
+									str += "<li class='page-item'><a class='page-link' href='" + (endNum + 1) + "'>다음</a></li>"; 
+								}
+								
+								str += "</ul></div>";
+								replyPageFooter.html(str);
+							}
+							
+							// 페이지 번호 클릭 이벤트
+							replyPageFooter.on("click", "li a", function(e){
+								e.preventDefault();
+								
+								var targetPageNum = $(this).attr("href");
+								
+								pageNum = targetPageNum;
+								
+								showList(pageNum);
+							});
+							
 							// 댓글 모달
 							var modal = $(".modal");
 							var modalInputReply = modal
@@ -272,8 +339,8 @@
 									modal.find("input").val("");
 									modal.modal("hide");
 
-									// 댓글 등록 후 목록 갱신
-									showList(1);
+									// 새로운 댓글 등록 후 댓글 목록의 마지막 페이지로 이동
+									showList(-1);
 								});
 							});
 
@@ -336,7 +403,7 @@
 
 									modal.modal("hide");
 
-									showList(1);
+									showList(pageNum);
 								});
 							})
 
@@ -349,7 +416,7 @@
 
 									modal.modal("hide");
 
-									showList(1);
+									showList(pageNum);
 								});
 							});
 						});
