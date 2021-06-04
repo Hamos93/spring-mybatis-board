@@ -13,8 +13,6 @@ public interface BoardService {
 	
 	public BoardVO get(Long bno);
 	
-	// public List<BoardVO> getList();
-	
 	public List<BoardVO> getListWithPaging(Criteria cri);
 	
 	public boolean modify(BoardVO board);

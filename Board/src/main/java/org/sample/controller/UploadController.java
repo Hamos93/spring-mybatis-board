@@ -34,32 +34,6 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Log4j
 public class UploadController {
 
-	/* [ Form 방식의 파일업로드 ] */
-	@GetMapping("/uploadForm")
-	public void uploadForm() {
-		log.info("[ upload Form ]");
-	}
-
-	// 스프링 MVC에서는 MultipartFile 타입을 제공해서 업로드되는 파일 데이터를 쉽게 처리
-	@PostMapping("uploadFormAction")
-	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
-		String uploadFolder = "C:\\upload";
-
-		for(MultipartFile multipartFile : uploadFile) {
-			log.info("----------------------");
-			log.info("Upload File Name: " + multipartFile.getOriginalFilename());
-			log.info("Upload File Size: " + multipartFile.getSize());
-
-			// 파일의 저장 -> transferTo() 활용
-			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
-			try {
-				multipartFile.transferTo(saveFile);
-			}catch(Exception e) {
-				log.error(e.getMessage());
-			}
-		}
-	}
-
 	/* [ Ajax를 이용하는 파일업로드 ] */
 	@GetMapping("/uploadAjax")
 	public void uploadAjax() {
@@ -221,7 +195,7 @@ public class UploadController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>("deleted", HttpStatus.OK);
+		return new ResponseEntity<>("File is deleted !", HttpStatus.OK);
 	}
 
 }

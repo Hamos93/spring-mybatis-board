@@ -30,8 +30,9 @@ public class BoardController {
 	// POST방식 후 처리 -> RedirectAttributes 객체를 이용하여 목록화면으로 이동
 	@PostMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
-		log.info("[ Controller ] register() 호출: " + board);
-
+		if(board.getAttachList() != null)
+			board.getAttachList().forEach(attach -> log.info("첨부파일: " + attach));
+		
 		service.register(board);
 		rttr.addFlashAttribute("result", board.getBno());
 
