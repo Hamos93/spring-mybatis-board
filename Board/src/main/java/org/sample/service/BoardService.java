@@ -2,6 +2,7 @@ package org.sample.service;
 
 import java.util.List;
 
+import org.sample.domain.BoardAttachVO;
 import org.sample.domain.BoardVO;
 import org.sample.domain.Criteria;
 
@@ -20,4 +21,6 @@ public interface BoardService {
 	public boolean remove(Long bno);
 	
 	public int getTotal(Criteria cri);
+	
+	public List<BoardAttachVO> getAttachList(Long bno);
 }

@@ -2,6 +2,7 @@ package org.sample.service;
 
 import java.util.List;
 
+import org.sample.domain.BoardAttachVO;
 import org.sample.domain.BoardVO;
 import org.sample.domain.Criteria;
 import org.sample.mapper.BoardAttachMapper;
@@ -64,6 +65,12 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
+	}
+
+	@Override
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		log.info("get Attach list by bno: " + bno);
+		return attachMapper.findByBno(bno);
 	}
 	
 }
