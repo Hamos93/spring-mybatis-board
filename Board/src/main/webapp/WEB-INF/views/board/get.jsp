@@ -385,11 +385,12 @@
 													}
 
 													var str = "";
-
+								
+													/*
 													if (list == null
 															|| list.length == 0) {
 														return;
-													}
+													}*/
 
 													for (var i = 0, len = list.length || 0; i < len; i++) {
 														str += "<li data-rno='" + list[i].rno + "'>";
