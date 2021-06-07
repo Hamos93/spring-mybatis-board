@@ -34,6 +34,49 @@
 * {
 	font-family: 'Song Myung', serif;
 }
+.uploadResult {
+	width: 100%;
+}
+
+.uploadResult ul {
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadResult ul li {
+	list-style: none;
+	padding: 10px;
+}
+
+.uploadResult ul li img {
+	width: 200px;
+}
+
+.bigPictureWrapper {
+	position: absolute;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	top: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: gray;
+	z-index: 100%;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.bigPicture {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.bigPicture img {
+	width: 600px;
+}
 </style>
 
 </head>
@@ -102,10 +145,32 @@
 							</div>
 						</form>
 					</div>
+					
+					<!-- 첨부파일 목록 -->
+					<div class="row">
+						<div class="col-xs-12">
+							<br /> <br />
+							<div class="panel panel-danger">
+								<div class="panel-heading">첨부파일</div>
+								<div class="panel-body">
+									<div class="form-group uploadDiv">
+										<input type="file" name="uploadFile" multiple="multiple">
+									</div>
+									
+									<div class="uploadResult">
+										<ul>
+
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
 <script type="text/javascript">
 	$(document).ready(function(){
 		var formObj = $("form");
@@ -131,12 +196,148 @@
 				formObj.append(amountTag);
 				formObj.append(keywordTag);
 				formObj.append(typeTag);
+			}else if(operation === 'modify'){
+				var str = "";
+				
+				$(".uploadResult ul li").each(function(i, obj){
+					var jobj = $(obj);
+					
+					str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data("filename") + "'>";
+					str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data("uuid") + "'>";
+					str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='" + jobj.data("path") + "'>";
+					str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data("type") + "'>";
+				});
+
+				formObj.append(str).submit();
 			}
-			
+
 			formObj.submit();
 		});
 	});
 </script>
-	
+<script type="text/javascript">
+	$(document).ready(function(){
+		(function(){
+			var bno = '<c:out value="${board.bno}"/>';
+
+			$.getJSON("/board/getAttachList", { bno: bno }, function(arr){
+				var str = "";
+				
+				$(arr).each(function(i, attach){
+					// image type
+					if(attach.fileType){
+						var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
+
+						str += "<li data-path='" + attach.uploadPath + "'";
+						str += " data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "'data-type='" + attach.fileType + "'";
+						str += " ><div>"; 
+						str += "<span> " + attach.fileName + "</span>";
+						str += "<button type='button' data-file=\'" + fileCallPath + "\'data-type='image' class='btn btn-warning btn-xs pull-right'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button><br>";
+						str += "<img src='/display?fileName=" + fileCallPath + "'>";
+						str += "</div></li>";
+					} else {
+						var fileCallPath = encodeURIComponent(attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+						
+						str += "<li ";
+						str += "data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename= '" + attach.fileName + "' data-type='" + attach.fileType + "'><div>"; 
+						str += "<span> " + attach.fileName + "</span>";
+						str += "<button type='button' data-file=\'" + fileCallPath + "\'data-type='file' class='btn btn-warning btn-xs btn-circle pull-right'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button><br>";
+						str += "<img src='/resources/img/attach.png'></a>";
+						str += "</div></li>";
+					}
+					
+					$(".uploadResult ul").html(str);
+				});
+			});
+		})(); // 즉시 실행함수
+
+		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+		var maxSize = 5242880; // 5MB
+		
+		// 파일 확장자 및 크기 검사
+		function checkExtension(fileName, fileSize){
+			if(fileSize >= maxSize){
+				alert("파일 사이즈를 초과하였습니다.")
+				return false;
+			}
+			
+			if(regex.test(fileName)){
+				alert("해당 확장자의 파일은 업로드할 수 없습니다.");
+				return false;
+			}
+			
+			return true;
+		}
+		
+		// 파일업로드는 태그 내용이 변경되는 것을 감지해서 처리
+		$("input[type='file']").change(function(e){
+			var formData = new FormData();
+
+			var inputFile = $("input[name='uploadFile']");
+			var files = inputFile[0].files;
+		
+			for(var i=0;i<files.length;i++){
+				if(!checkExtension(files[i].name, files[i].size)) return false;
+
+				formData.append("uploadFile", files[i]);
+			}
+			
+			$.ajax({
+				url: '/uploadAjaxAction',
+				processData: false,
+				contentType: false,
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				success: function(result){
+					showUploadResult(result);
+				}
+			});
+		});
+		
+		// 업로드 결과 반영
+		function showUploadResult(uploadResultArr){
+			if(!uploadResultArr || uploadResultArr.length == 0) return;
+			
+			var uploadUL = $(".uploadResult ul");
+			var str = "";
+			
+			$(uploadResultArr).each(function(i, obj){
+				if(obj.fileType){
+					var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+					
+					str += "<li data-path='" + obj.uploadPath + "'";
+					str += " data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "'data-type='" + obj.fileType + "'";
+					str += " ><div>"; 
+					str += "<span> " + obj.fileName + "</span>";
+					str += "<button type='button' data-file=\'" + fileCallPath + "\'data-type='image' class='btn btn-warning btn-xs pull-right'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button><br>";
+					str += "<img src='/display?fileName=" + fileCallPath + "'>";
+					str += "</div></li>";
+				}else {
+					var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+					var fileLink = fileCallPath.replace(new RegExp(/\\/g), "/");
+				
+					str += "<li ";
+					str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename= '" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"; 
+					str += "<span> " + obj.fileName + "</span>";
+					str += "<button type='button' data-file=\'" + fileCallPath + "\'data-type='file' class='btn btn-warning btn-xs btn-circle pull-right'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button><br>";
+					str += "<img src='/resources/img/attach.png'></a>";
+					str += "</div></li>";
+				}
+			});
+			
+			uploadUL.append(str);
+		}
+		
+		// 수정화면에서 첨부파일 삭제처리는 화면에서만 반영
+		$(".uploadResult").on("click", "button", function(e){
+			if(confirm("Remove this file?")){
+				var targetLi = $(this).closest("li");
+				targetLi.remove();
+			}
+		});
+	});
+</script>
+
 </body>
 </html>

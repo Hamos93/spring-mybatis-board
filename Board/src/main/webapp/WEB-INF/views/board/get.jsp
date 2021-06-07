@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
@@ -13,22 +12,17 @@
 <title>게시판</title>
 
 <!-- 합쳐지고 최소화된 최신 CSS -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <!-- 구글 웹 폰트 -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -90,27 +84,22 @@
 					<div class="panel-heading">게시글을 조회합니다</div>
 					<div class="panel-body">
 						<div class="form-group col-lg-9 col-lg-offset-1">
-							<br /> <label>번호</label> <input type="text" class="form-control"
-								name="title" value='<c:out value="${board.bno }"/>'
-								readonly="readonly">
+							<br /> <label>번호</label>
+							<input type="text" class="form-control" name="title" value='<c:out value="${board.bno }"/>' readonly="readonly">
 						</div>
 						<div class="form-group col-lg-9 col-lg-offset-1">
-							<br /> <label>제목</label> <input type="text" class="form-control"
-								name="title" value='<c:out value="${board.title }"/>'
-								readonly="readonly">
+							<br /> <label>제목</label>
+							<input type="text" class="form-control" name="title" value='<c:out value="${board.title }"/>' readonly="readonly">
 						</div>
 						<div class="form-group col-lg-9 col-lg-offset-1">
 							<br /> <label>내용</label>
-							<textarea class="form-control" name="content" rows="10"
-								readonly="readonly"><c:out value="${board.content }" /></textarea>
+							<textarea class="form-control" name="content" rows="10" readonly="readonly"><c:out value="${board.content }" /></textarea>
 						</div>
 						<div class="form-group col-lg-9 col-lg-offset-1">
 							<br /> <label>작성자</label>
 							<div class="input-group">
-								<span class="input-group-addon" id="basic-addon1"><span
-									class="glyphicon glyphicon-user"></span></span><input type="text"
-									class="form-control" name="writer"
-									value='<c:out value="${board.writer }"/>' readonly="readonly">
+								<span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user"></span></span>
+								<input type="text" class="form-control" name="writer" value='<c:out value="${board.writer }"/>' readonly="readonly">
 							</div>
 						</div>
 						<div class="col-lg-9 col-lg-offset-1">
@@ -119,18 +108,13 @@
 							<button data-oper='modify' class="btn btn-warning">수정</button>
 
 							<form id='operForm' action="/board/modify" method="get">
-								<input type='hidden' id='bno' name='bno'
-									value='<c:out value="${board.bno }"/>'>
+								<input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno }"/>'>
 								<!-- 페이지 정보 -->
-								<input type='hidden' name='pageNum'
-									value='<c:out value="${cri.pageNum }"/>'> <input
-									type='hidden' name='amount'
-									value='<c:out value="${cri.amount }"/>'>
+								<input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum }"/>'>
+								<input type='hidden' name='amount' value='<c:out value="${cri.amount }"/>'>
 								<!-- 검색 정보 -->
-								<input type="hidden" name="type"
-									value='<c:out value="${cri.type }"/>'> <input
-									type="hidden" name="keyword"
-									value='<c:out value="${cri.keyword }"/>'>
+								<input type="hidden" name="type" value='<c:out value="${cri.type }"/>'>
+								<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }"/>'>
 							</form>
 						</div>
 					</div>
@@ -161,8 +145,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp;댓글
-						<button id="addReplyBtn" type="button"
-							class="btn btn-primary btn-xs pull-right" aria-label="Left Align">
+						<button id="addReplyBtn" type="button" class="btn btn-primary btn-xs pull-right" aria-label="Left Align">
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</button>
 					</div>
@@ -171,8 +154,7 @@
 							<li data-rno="12">
 								<div>
 									<div class="header">
-										<strong></strong> <small class="pull-right text-muted">
-										</small>
+										<strong></strong> <small class="pull-right text-muted"> </small>
 									</div>
 									<p></p>
 								</div>
@@ -197,27 +179,25 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<h4 class="modal-title">
-						<i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;</i>댓글
-						등록
+						<i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;</i>댓글 등록
 					</h4>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>댓글</label> <input class="form-control" name="reply"
-							value="새로운 댓글">
+						<label>댓글</label>
+						<input class="form-control" name="reply" value="새로운 댓글">
 					</div>
 					<div class="form-group">
-						<label>작성자</label> <input class="form-control" name="replyer"
-							value="댓글러">
+						<label>작성자</label>
+						<input class="form-control" name="replyer" value="댓글러">
 					</div>
 					<div class="form-group">
-						<label>등록일</label> <input class="form-control" name="replyDate"
-							value="">
+						<label>등록일</label>
+						<input class="form-control" name="replyDate" value="">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -282,6 +262,7 @@
 																					+ attach.fileName);
 
 																			str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-fileName='" + attach.fileName + "' data-type='" + attach.fileType + "'><div>";
+																			str += "<span> " + attach.fileName + "</span><br/>";
 																			str += "<img src='/display?fileName="
 																					+ fileCallPath
 																					+ "'>";
@@ -339,10 +320,13 @@
 											height : '100%'
 										}, 1000);
 							}
-							
-							$(".bigPictureWrapper").on("click", function(e){
-								$(".bigPicture").animate({ width: '0%', height: '0%' }, 1000);
-								setTimeout(function(){
+
+							$(".bigPictureWrapper").on("click", function(e) {
+								$(".bigPicture").animate({
+									width : '0%',
+									height : '0%'
+								}, 1000);
+								setTimeout(function() {
 									$('.bigPictureWrapper').hide();
 								}, 1000);
 							});
@@ -385,7 +369,7 @@
 													}
 
 													var str = "";
-								
+
 													/*
 													if (list == null
 															|| list.length == 0) {

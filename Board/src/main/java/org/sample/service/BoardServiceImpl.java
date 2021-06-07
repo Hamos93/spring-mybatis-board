@@ -51,10 +51,22 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardVO> getListWithPaging(Criteria cri) {
 		return mapper.getListWithPaging(cri);
 	}
-	
+
+	@Transactional
 	@Override
 	public boolean modify(BoardVO board) {
-		return mapper.update(board) == 1;
+		// 게시물의 모든 첨부파일 목록 삭제
+		attachMapper.deleteAll(board.getBno());
+		boolean result = mapper.update(board) == 1;
+		
+		if(result && board.getAttachList() != null && board.getAttachList().size() > 0) {
+			board.getAttachList().forEach(attach -> {
+				attach.setBno(board.getBno());
+				attachMapper.insert(attach);
+			});
+		}
+		
+		return result;
 	}
 
 	@Transactional
