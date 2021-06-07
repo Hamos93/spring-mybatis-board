@@ -17,4 +17,9 @@
 	<select id="findByBno" resultType="org.sample.domain.BoardAttachVO">
 		select * from tbl_attach where bno = #{bno}
 	</select>
+	
+	<delete id="deleteAll">
+		delete from tbl_attach where bno = #{bno}
+	</delete>
+
 </mapper>

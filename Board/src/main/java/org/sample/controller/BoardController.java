@@ -1,5 +1,8 @@
 package org.sample.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.sample.domain.BoardAttachVO;
@@ -34,6 +37,27 @@ public class BoardController {
 	@Autowired
 	BoardService service;
 
+	private void deleteFiles(List<BoardAttachVO> attachList) {
+		if(attachList == null || attachList.size() == 0) return;
+		
+		attachList.forEach(attach -> {
+			try {
+				Path file = Paths.get("C:\\upload\\" + attach.getUploadPath() + "\\" + attach.getUuid() + "_" + attach.getFileName());
+			
+				Files.deleteIfExists(file);
+				
+				if(Files.probeContentType(file).startsWith("image")) {
+					Path thumbNail = Paths.get("C:\\upload\\" + attach.getUploadPath() + "\\s_" + attach.getUuid() + "_" + attach.getFileName());
+					
+					Files.delete(thumbNail);
+				}
+			
+			}catch(Exception e) {
+				log.error("delete file error" + e.getMessage());
+			}
+		});
+	}
+	
 	// POST방식 후 처리 -> RedirectAttributes 객체를 이용하여 목록화면으로 이동
 	@PostMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
@@ -66,25 +90,34 @@ public class BoardController {
 		if(service.modify(board))
 			rttr.addFlashAttribute("result", "success");
 	
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-		return "redirect:/board/list";
+		// rttr.addAttribute("pageNum", cri.getPageNum());
+		// rttr.addAttribute("amount", cri.getAmount());
+		// rttr.addAttribute("type", cri.getType());
+		// rttr.addAttribute("keyword", cri.getKeyword());
+
+		// UriComponentsBuilder를 이용하는 링크 생성
+		return "redirect:/board/list" + cri.getListLink();
 	}
 	
 	@PostMapping("/remove")
 	public String remove(Long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
-		if(service.remove(bno))
-			rttr.addFlashAttribute("result", "success");
-	
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
+		// rttr.addAttribute("pageNum", cri.getPageNum());
+		// rttr.addAttribute("amount", cri.getAmount());
+		// rttr.addAttribute("type", cri.getType());
+		// rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		// 1. 해당 게시물의 첨부파일 목록 준비
+		List<BoardAttachVO> attachList = service.getAttachList(bno);
+		
+		// 2. 데이터베이스 상에서 해당 게시물과 첨부파일 데이터 삭제
+		if(service.remove(bno)) {
+			// 3. 첨부파일 목록을 이용해서 해당 폴더에서 파일 삭제
+			deleteFiles(attachList);
+			
+			rttr.addAttribute("result", "success");
+		}
+		
+ 		return "redirect:/board/list" + cri.getListLink();
 	}
 	
 	@GetMapping("/register")
@@ -99,5 +132,6 @@ public class BoardController {
 		
 		return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
 	}
+	
 	
 }
