@@ -3,6 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<!-- 스프링 시큐리티 관련 태그 라이브러리 -->
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,6 +93,8 @@
 					<div class="panel-heading">게시글을 등록합니다</div>
 					<div class="panel-body">
 						<form role="form" action="/board/register" method="post">
+							<!-- POST 방식의 전송은 반드시 CSRF 토큰값 추가 -->
+							<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 							<div class="form-group col-lg-9 col-lg-offset-1">
 								<br /> <label>제목</label> <input type="text"
 									class="form-control" name="title" placeholder="제목을 입력하세요">
@@ -105,7 +110,7 @@
 								<div class="input-group">
 									<span class="input-group-addon" id="basic-addon1"><span
 										class="glyphicon glyphicon-user"></span></span><input type="text"
-										class="form-control" name="writer" placeholder="작성자를 입력하세요">
+										class="form-control" name="writer" value='<sec:authentication property="principal.username"/>' readonly="readonly">
 								</div>
 							</div>
 							<div class="form-group col-lg-9 col-lg-offset-1">

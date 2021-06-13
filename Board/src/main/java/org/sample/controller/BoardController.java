@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,8 +59,15 @@ public class BoardController {
 		});
 	}
 	
+	@GetMapping("/register")
+	@PreAuthorize("isAuthenticated()")
+	public void register() {
+		
+	}
+	
 	// POST방식 후 처리 -> RedirectAttributes 객체를 이용하여 목록화면으로 이동
 	@PostMapping("/register")
+	@PreAuthorize("isAuthenticated()")
 	public String register(BoardVO board, RedirectAttributes rttr) {
 		if(board.getAttachList() != null)
 			board.getAttachList().forEach(attach -> log.info("첨부파일: " + attach));
@@ -120,11 +128,6 @@ public class BoardController {
  		return "redirect:/board/list" + cri.getListLink();
 	}
 	
-	@GetMapping("/register")
-	public void register() {
-		
-	}
-	
 	@GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno){
@@ -132,6 +135,5 @@ public class BoardController {
 		
 		return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
 	}
-	
-	
+
 }
