@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
@@ -13,22 +12,17 @@
 <title>게시판</title>
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- 합쳐지고 최소화된 최신 CSS -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
 <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <!-- 구글 웹 폰트 -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -48,8 +42,7 @@
 			</div>
 			<div class="alert alert-success" role="alert">
 				새로운 게시글을 등록해주세요
-				<button id="regBtn" type="button"
-					class="btn btn-default col-xs-offset-9">글 등록</button>
+				<button id="regBtn" type="button" class="btn btn-default col-xs-offset-9">글 등록</button>
 			</div>
 		</div>
 
@@ -64,42 +57,26 @@
 			<c:forEach items="${list}" var="board">
 				<tr>
 					<td><c:out value="${board.bno}" /></td>
-					<td><a class='move' href='<c:out value="${board.bno}" />'><c:out
-								value="${board.title}" /> <b>[<c:out value="${board.replyCnt }"/>]</b></a></td>
+					<td><a class='move' href='<c:out value="${board.bno}" />'><c:out value="${board.title}" /> <b>[<c:out value="${board.replyCnt }" />]
+						</b></a></td>
 					<td><c:out value="${board.writer}" /></td>
-					<td><fmt:formatDate pattern="yyyy-MM-dd"
-							value="${board.regdate }" /></td>
-					<td><fmt:formatDate pattern="yyyy-MM-dd"
-							value="${board.updateDate }" /></td>
+					<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate }" /></td>
+					<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate }" /></td>
 				</tr>
 			</c:forEach>
 		</table>
 
 		<!-- 검색창 -->
 		<div class="row">
-			<form class="form-inline" id="searchForm" action="/board/list"
-				method="get">
+			<form class="form-inline" id="searchForm" action="/board/list" method="get">
 				<select class="form-control" name="type">
-					<option value="T"
-						<c:out value="${pageMaker.cri.type eq 'T' ? 'selected':'' }"/>>제목</option>
-					<option value="C"
-						<c:out value="${pageMaker.cri.type eq 'C' ? 'selected':'' }"/>>내용</option>
-					<option value="W"
-						<c:out value="${pageMaker.cri.type eq 'W' ? 'selected':'' }"/>>작성자</option>
-					<option value="TC"
-						<c:out value="${pageMaker.cri.type eq 'TC' ? 'selected':'' }"/>>제목
-						+ 내용</option>
-					<option value="TW"
-						<c:out value="${pageMaker.cri.type eq 'TW' ? 'selected':'' }"/>>제목
-						+ 작성자</option>
-					<option value="TWC"
-						<c:out value="${pageMaker.cri.type eq 'TWC' ? 'selected':'' }"/>>제목
-						+ 작성자 + 내용</option>
-				</select> <input class="form-control" type="text" name="keyword"
-					style="width: 400px;"
-					value='<c:out value="${pageMaker.cri.keyword }"/>'> <input
-					type="hidden" value="${pageMaker.cri.pageNum }"> <input
-					type="hidden" value="${pageMaker.cri.amount }">
+					<option value="T" <c:out value="${pageMaker.cri.type eq 'T' ? 'selected':'' }"/>>제목</option>
+					<option value="C" <c:out value="${pageMaker.cri.type eq 'C' ? 'selected':'' }"/>>내용</option>
+					<option value="W" <c:out value="${pageMaker.cri.type eq 'W' ? 'selected':'' }"/>>작성자</option>
+					<option value="TC" <c:out value="${pageMaker.cri.type eq 'TC' ? 'selected':'' }"/>>제목 + 내용</option>
+					<option value="TW" <c:out value="${pageMaker.cri.type eq 'TW' ? 'selected':'' }"/>>제목 + 작성자</option>
+					<option value="TWC" <c:out value="${pageMaker.cri.type eq 'TWC' ? 'selected':'' }"/>>제목 + 작성자 + 내용</option>
+				</select> <input class="form-control" type="text" name="keyword" style="width: 400px;" value='<c:out value="${pageMaker.cri.keyword }"/>'> <input type="hidden" value="${pageMaker.cri.pageNum }"> <input type="hidden" value="${pageMaker.cri.amount }">
 				<button class="btn btn-default">검색</button>
 			</form>
 		</div>
@@ -110,31 +87,22 @@
 			<ul class="pagination">
 
 				<c:if test="${pageMaker.prev }">
-					<li class="paginate_button previous"><a
-						href="${pageMaker.startPage - 1}">이전</a></li>
+					<li class="paginate_button previous"><a href="${pageMaker.startPage - 1}">이전</a></li>
 				</c:if>
 
-				<c:forEach var="num" begin="${pageMaker.startPage }"
-					end="${pageMaker.endPage }">
-					<li
-						class="paginate_button ${pageMaker.cri.pageNum == num ? 'active': '' }"><a
-						href="${num }">${num }</a></li>
+				<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
+					<li class="paginate_button ${pageMaker.cri.pageNum == num ? 'active': '' }"><a href="${num }">${num }</a></li>
 				</c:forEach>
 
 				<c:if test="${pageMaker.next }">
-					<li class="paginate_button next"><a
-						href="${pageMaker.endPage + 1}">다음</a></li>
+					<li class="paginate_button next"><a href="${pageMaker.endPage + 1}">다음</a></li>
 				</c:if>
 			</ul>
 			<form id="actionForm" action="/board/list" method="get">
-				<input type="hidden" name="pageNum"
-					value="${pageMaker.cri.pageNum }"> <input type="hidden"
-					name="amount" value="${pageMaker.cri.amount }">
+				<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }"> <input type="hidden" name="amount" value="${pageMaker.cri.amount }">
 
 				<!-- 페이지 이동 시에도 검색 데이터와 함께 전송 -->
-				<input type="hidden" name="type" value="${pageMaker.cri.type }">
-				<input type="hidden" name="keyword"
-					value="${pageMaker.cri.keyword }">
+				<input type="hidden" name="type" value="${pageMaker.cri.type }"> <input type="hidden" name="keyword" value="${pageMaker.cri.keyword }">
 			</form>
 		</div>
 		<!-- end Pagination -->
@@ -144,8 +112,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<h4 class="modal-title">
