@@ -3,6 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<!-- 스프링 시큐리티 관련 태그 라이브러리 -->
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,6 +92,9 @@
 					<div class="panel-heading">게시글을 수정합니다</div>
 					<div class="panel-body">
 						<form role="form" action="/board/modify" method="post">
+							<!-- POST 방식의 전송은 반드시 CSRF 토큰값 추가 -->
+							<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+							
 							<!-- 페이지 정보 -->
 							<input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum }"/>'>
 							<input type='hidden' name='amount' value='<c:out value="${cri.amount }"/>'>
@@ -139,9 +145,16 @@
 							
 							<div class="col-lg-9 col-lg-offset-1">
 								<br /> <br />
+								
 								<button data-oper='list' class="btn btn-primary">목록</button>
-								<button data-oper='modify' class="btn btn-warning">수정</button>
-								<button data-oper='remove' class="btn btn-danger">삭제</button>
+								<sec:authentication property="principal" var="pinfo"/>
+									<sec:authorize access="isAuthenticated()">
+										<c:if test="${pinfo.username eq board.writer }">
+											<button data-oper='modify' class="btn btn-warning">수정</button>
+											<button data-oper='remove' class="btn btn-danger">삭제</button>
+										</c:if>
+									</sec:authorize>
+							
 							</div>
 						</form>
 					</div>
