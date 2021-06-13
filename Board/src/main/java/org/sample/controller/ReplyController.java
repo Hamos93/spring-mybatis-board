@@ -1,7 +1,5 @@
 package org.sample.controller;
 
-import java.util.List;
-
 import org.sample.domain.Criteria;
 import org.sample.domain.ReplyPageDTO;
 import org.sample.domain.ReplyVO;
@@ -9,6 +7,7 @@ import org.sample.service.ReplyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +28,7 @@ public class ReplyController {
 
 	ReplyService service;
 	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/new", consumes = "application/json", produces = { MediaType.TEXT_PLAIN_VALUE })
 	public ResponseEntity<String> create(@RequestBody ReplyVO reply){
 		int count = service.register(reply);
@@ -65,12 +65,14 @@ public class ReplyController {
 		return new ResponseEntity<>(service.get(rno), HttpStatus.OK);
 	}
 	
-	@DeleteMapping(value = "/{rno}", produces = { MediaType.TEXT_PLAIN_VALUE })
-	public ResponseEntity<String> remove(@PathVariable("rno") Long rno){
+	@PreAuthorize("principal.username == #vo.replyer")
+	@DeleteMapping(value = "/{rno}")
+	public ResponseEntity<String> remove(@RequestBody ReplyVO vo, @PathVariable("rno") Long rno){
 		return service.remove(rno) == 1 ? new ResponseEntity<>("success", HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	// 댓글 수정은 JSON 형태로 전달되는 데이터와 파라미터로 전달되는 댓글 번호를 처리
+	@PreAuthorize("principal.username == #reply.replyer")
 	@RequestMapping(method = { RequestMethod.PUT, RequestMethod.PATCH }, value = "/{rno}", consumes = "application/json", produces = { MediaType.TEXT_PLAIN_VALUE })
 	public ResponseEntity<String> modify(@RequestBody ReplyVO reply, @PathVariable("rno") Long rno) {
 		reply.setRno(rno);

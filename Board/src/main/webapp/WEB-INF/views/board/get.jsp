@@ -472,11 +472,21 @@
 							var modalRemoveBtn = $("#modalRemoveBtn");
 							var modalRegisterBtn = $("#modalRegisterBtn");
 
+							var replyer = null;
+							
+							<sec:authorize access="isAuthenticated()">
+								replyer = '<sec:authentication property="principal.username"/>';
+							</sec:authorize>
+							
+							var csrfHeaderName = "${_csrf.headerName}";
+							var csrfToken = "${_csrf.token}";
+							
 							$("#addReplyBtn")
 									.on(
 											"click",
 											function() {
 												modal.find("input").val("");
+												modal.find("input[name='replyer']").val(replyer);
 												modalInputReplyDate.closest(
 														"div").hide();
 												modal
@@ -489,6 +499,10 @@
 												$(".modal").modal("show");
 											});
 
+							$(document).ajaxSend(function(e, xhr, options){
+								xhr.setRequestHeader(csrfHeaderName, csrfToken);
+							});
+							
 							// 댓글 등록 클릭 이벤트
 							modalRegisterBtn.on("click", function(e) {
 								var reply = {
@@ -555,12 +569,27 @@
 
 							// 댓글 수정 클릭 이벤트
 							modalModifyBtn.on("click", function(e) {
+								var originalReplyer = modalInputReplyer.val();
+								
 								var reply = {
 									rno : modal.data("rno"),
 									reply : modalInputReply.val(),
-									replyer : modalInputReplyer.val()
+									replyer : originalReplyer
 								};
-								console.log(reply);
+								
+								if(!replyer){
+									alert("로그인 후 수정이 가능합니다.");
+									modal.modal("hide");
+									
+									return;
+								}
+
+								if(replyer != originalReplyer){
+									alert("자신이 작성한 댓글만 수정이 가능합니다.");
+									modal.modal("hide");
+									
+									return;
+								}
 
 								replyService.update(reply, function(result) {
 									alert(result);
@@ -569,13 +598,30 @@
 
 									showList(pageNum);
 								});
-							})
+							});
 
 							// 댓글 삭제 클릭 이벤트
 							modalRemoveBtn.on("click", function(e) {
 								var rno = modal.data("rno");
 
-								replyService.remove(rno, function(result) {
+								if(!replyer){
+									alert("로그인이 필요한 서비스입니다.");
+									modal.modal("hide");
+									return;
+								}
+								
+								var originalReplyer = modalInputReplyer.val();
+								
+								console.log("originalReplyer: " + originalReplyer);
+								
+								if(replyer != originalReplyer){
+									alert("자신이 작성한 댓글만 삭제가 가능합니다.");
+									modal.modal("hide");
+									
+									return;
+								}
+								
+								replyService.remove(rno, originalReplyer, function(result) {
 									alert(result);
 
 									modal.modal("hide");
