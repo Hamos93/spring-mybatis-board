@@ -2,6 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<!-- 스프링 시큐리티 관련 태그 라이브러리 -->
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -105,8 +108,14 @@
 						<div class="col-lg-9 col-lg-offset-1">
 							<br /> <br />
 							<button data-oper='list' class="btn btn-primary">목록</button>
-							<button data-oper='modify' class="btn btn-warning">수정</button>
-
+								
+							<sec:authentication property="principal" var="pinfo"/>
+								<sec:authorize access="isAuthenticated()">
+									<c:if test="${pinfo.username eq board.writer }">
+										<button data-oper='modify' class="btn btn-warning">수정</button>
+									</c:if>
+								</sec:authorize>
+								
 							<form id='operForm' action="/board/modify" method="get">
 								<input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno }"/>'>
 								<!-- 페이지 정보 -->
@@ -145,9 +154,11 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp;댓글
-						<button id="addReplyBtn" type="button" class="btn btn-primary btn-xs pull-right" aria-label="Left Align">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</button>
+						<sec:authorize access="isAuthenticated()">
+							<button id="addReplyBtn" type="button" class="btn btn-primary btn-xs pull-right" aria-label="Left Align">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</button>
+						</sec:authorize>
 					</div>
 					<div class="panel-body">
 						<ul class="chat list-unstyled">
