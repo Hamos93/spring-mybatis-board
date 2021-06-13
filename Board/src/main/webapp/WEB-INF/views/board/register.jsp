@@ -181,6 +181,9 @@
 				
 				return true;
 			}
+
+			var csrfHeaderName = "${_csrf.headerName}"; 
+			var csrfToken = "${_csrf.token}";
 			
 			// 파일업로드는 태그 내용이 변경되는 것을 감지해서 처리
 			$("input[type='file']").change(function(e){
@@ -199,6 +202,9 @@
 					url: '/uploadAjaxAction',
 					processData: false,
 					contentType: false,
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(csrfHeaderName, csrfToken);
+					},
 					data: formData,
 					type: 'POST',
 					dataType: 'json',
@@ -252,6 +258,9 @@
 				$.ajax({
 					url: '/deleteFile',
 					data: { fileName: targetFile, type: type },
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(csrfHeaderName, csrfToken);
+					},
 					dataType: 'text',
 					type: 'POST',
 					success: function(result){

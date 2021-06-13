@@ -283,6 +283,8 @@
 		}
 		
 		// 파일업로드는 태그 내용이 변경되는 것을 감지해서 처리
+		var csrfHeaderName = "${_csrf.headerName}"; 
+		var csrfToken = "${_csrf.token}";
 		$("input[type='file']").change(function(e){
 			var formData = new FormData();
 
@@ -301,6 +303,9 @@
 				contentType: false,
 				data: formData,
 				type: 'POST',
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(csrfHeaderName, csrfToken);
+				},
 				dataType: 'json',
 				success: function(result){
 					showUploadResult(result);
